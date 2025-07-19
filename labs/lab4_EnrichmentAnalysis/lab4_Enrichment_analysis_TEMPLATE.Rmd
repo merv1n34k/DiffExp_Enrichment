@@ -1,0 +1,277 @@
+---
+title: "lab4: Enrichment analysis"
+author: "Your name or nickname"
+date: "2025-07-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load required libraries 
+
+```{r, message=FALSE}
+# Load necessary libraries for pathway enrichment analysis
+# library(clusterProfiler) # Provide short description 
+# library(pathview) # Provide short description 
+# library(enrichplot) # Provide short description 
+# library(org.Hs.eg.db) # Provide short description 
+# library(tidyverse) # Provide short description 
+
+# 💡 HELP: Check what these libraries do
+# ?clusterProfiler
+# ?pathview
+```
+
+## Load Differential Gene Expression Results
+
+```{r}
+# TODO: Load the complete differential gene expression results from previous lab
+# HINT: Use read_tsv() function from tidyverse package
+# HINT: The file path should be like "../lab3_Diffexpression/results_*/*_all_genes_results.tsv"
+
+# all_expressed_genes <- ______(
+#   "______")
+
+# Display the loaded data
+# all_expressed_genes
+```
+
+**🧠 Think:** How many genes are in the results table? What columns contain the key information you need?
+
+## Filter Differentially Expressed Genes by Significance
+
+```{r}
+# TODO: Filter genes with adjusted p-value < 0.05
+# HINT: Use filter() function from dplyr
+# HINT: Use padj column for filtering
+
+# significant_genes <- all_expressed_genes %>% ______(______ < ______)
+# significant_genes
+
+# 💡 HELP: Learn about data filtering
+# ?filter
+```
+
+**🧠 Think:** How many genes are significantly differentially expressed?
+
+## Gene Ontology (GO) Over-Representation Analysis
+
+```{r}
+# TODO: Define analysis parameters
+# HINT: Set organism database for human samples
+# HINT: Extract Ensembl IDs from significant genes
+
+# Define organism database for human samples
+# organismDB="org.Hs.eg.db" 
+
+# Extract Ensembl IDs of significantly differentially expressed genes
+# selected_genes <- significant_genes$______
+
+# Set up common parameters for GO analysis
+# pvalue_cutoff <- ______ # Statistical significance threshold: set to 0.05
+# adjustment_method <- "______"  # Benjamini-Hochberg correction for multiple testing
+# universe_genes <- all_expressed_genes$______  # Background gene set
+```
+
+**🧠 Think:** Why do we need a background "universe" of genes? What would happen if we didn't use one?
+
+### Molecular Funcrtion (MF) Domain 
+
+```{r}
+# TODO: Perform GO enrichment analysis for molecular function
+# HINT: Use enrichGO() function
+# HINT: Set ont = "MF" for molecular function
+# HINT: Set readable = TRUE to get gene symbols
+
+# GO_MF <- enrichGO(
+#   ______,                       # selected_genes
+#   ______,                       # organismDB 
+#   keyType = "ENSEMBL",          # Gene ID type (ENSEMBL)
+#   ont = "______",               # Ontology type (MF)
+#   pvalueCutoff = ______,        # pvalue_cutoff
+#   pAdjustMethod = ______,       # adjustment_method
+#   universe = universe_genes,    # universe_genes
+#   readable = TRUE)
+
+# cat("Molecular Function GO terms enriched:", nrow(GO_MF@result), "\n")
+# # Preview enriched pathways
+# head(GO_MF@result)
+```
+
+### Cellular component (CC) Domain 
+
+```{r}
+# TODO: Perform GO enrichment for cellular component
+# HINT: Similar to above but change ont = "CC"
+
+# GO_CC <- ______
+  
+# cat("Cellular Component GO terms enriched:", nrow(GO_CC@result), "\n")
+# # Preview enriched pathways
+# head(GO_CC@result)
+```
+
+### Biological process (BP) Domain 
+
+```{r}
+# TODO: Perform GO enrichment for biological process
+# HINT: Use ont = "BP" for biological process
+
+# GO_BP <- ______
+
+# cat("Biological Process GO terms enriched:", nrow(GO_BP@result), "\n")
+# # Preview enriched pathways
+# head(GO_BP)
+```
+
+## Visualize GO Enrichment Results
+
+```{r}
+# TODO: Create bar plots for all three GO domains
+# HINT: Use barplot() function from clusterProfiler
+
+# Set up plotting parameters for consistent visualization
+# par(mfrow = c (3,1))
+
+# TODO: Create variables to reuse
+# showCategory_n = ______     # Number of categories to show (try 10)
+# title_conditions = "______" # Title for plots (e.g., "experiment vs control")
+
+# TODO: Create molecular function barplot
+# HINT: Check if results exist before plotting (nrow > 0)
+# HINT: Use print() to display the plot
+
+# Molecular Function barplot
+# if(nrow(GO_MF@result) > 0) {
+#   print(______(______, 
+#                 showCategory = ______, 
+#                 title = paste0(title_conditions, ": Molecular Function")))
+# } else {
+#   cat("No significant Molecular Function terms found\n")
+# }
+
+# Cellular Component barplot  
+# TODO: Apply the same logic as above to crearw a barplot for Cellular Component Domain
+
+# Biological Process barplot
+# TODO: Apply the same logic as above to crearw a barplot for Biological Process Domain
+
+```
+
+**🧠 Think:** What biological processes do you find to be enriched? Do they make sense for your biological system of study? 
+
+```{r}
+# TODO: Save three barplots and three tables (CC, BP, MF) in results folder
+# HINT: Create results directory structure
+# HINT: Use dir.create() and write_tsv() functions
+# HINT: Give meaningful and specific names to your result files
+```
+
+## KEGG pathway over-representation analysis 
+
+**Note: Internet access required for KEGG database queries**
+
+```{r}
+# TODO: Create named vector with log2 fold changes for KEGG analysis
+# HINT: Values should be log2FoldChange, names should be ENTREZID
+# HINT: Use names() function to assign Entrez IDs as names
+# selected_genes_LFC <- significant_genes$______
+# ______(selected_genes_LFC) <- significant_genes$______
+```
+
+### Run KEGG Enrichment Analysis
+
+```{r}
+# TODO: Perform KEGG pathway enrichment analysis
+# HINT: Use enrichKEGG() function
+# HINT: Use names(selected_genes_LFC) to get Entrez IDs
+
+# KEGG_analysis <- ______(
+#   _____(selected_genes_LFC),    # Entrez gene IDs
+#   organism = "_____",           # Human species code in KEEG is "hsa"
+#   keyType = "_____",            # KEGG gene identifier type (kegg)
+#   pvalueCutoff = 0.05,          # Use your pvalue_cutoff
+#   pAdjustMethod = "BH",         # Use your adjustment_method
+#   universe = as.character(na.omit(all_expressed_genes$_____)), # Background Entrez IDs
+#   use_internal_data = FALSE
+# )
+
+# 💡 HELP: Learn about KEGG analysis
+# ?enrichKEGG
+```
+
+```{r}
+# cat("KEGG pathways enriched:", nrow(KEGG_analysis@result), "\n")
+# TODO: Preview enriched KEGG pathways
+# ______(KEGG_analysis)
+```
+
+**🧠 Think:** What biological processes do you find to be enriched? Do they make sense for your biological system of study? 
+
+## KEGG Pathway Visualization with Pathview
+
+```{r}
+# TODO: Create pathway diagram with gene expression overlay
+# HINT: Use pathview() function
+# HINT: Calculate maximum absolute fold change for scaling
+
+# Let's plot top KEGG pathways and overlay the KEGG maps with information from
+# DGE analysis 
+
+# Define scale limit for log2FC in pathway visualization
+# max_value = round(max(abs(selected_genes_LFC)), 1)
+
+# TODO: Create pathway visualization
+# HINT: Use any of your top pathway IDs, e.g. "hsa04820" 
+# HINT: Use "hsa" for human species
+# HINT: Use list(gene=max_value, cpd=1) for limits
+
+# hsa04820 <- pathview(gene.data  = selected_genes_LFC,
+#                      pathway.id = "______",
+#                      species    = "______",
+#                      limit      = list(gene=______, cpd=1))
+
+# Examine the saved pathview image
+
+# 💡 HELP: Learn about pathway visualization
+# ?pathview
+```
+
+**🧠 Think:** In the pathway diagram, what do the colors represent? How do you interpret the results?
+
+## Advanced Challenge (Optional)
+
+There are many other types of enrichment analysis one can do. We suggest you try to expand your experience by doing DOSE, Reactome and WikiPathways analysis on your own following the same logic and structure as in GO and KEGG. You will find some code below which you need to modify and extend.
+
+```{r}
+# DOSE package
+# DOSE_results <- enrichDO(gene = ENTREZ_diff_genes,
+#                                  ont           = "DO",
+#                                  pvalueCutoff  = 0.05,
+#                                  pAdjustMethod = "BH",
+#                                  universe      = as.vector(res$ENTREZID),
+#                                  minGSSize     = 5,
+#                                  maxGSSize     = 500,
+#                                  qvalueCutoff  = 0.05,
+#                                  readable      = FALSE)
+
+# ReactomePA package
+# enrichPathway(
+      # gene = ENTREZ_diff_genes,
+      # pvalueCutoff = 0.05, readable=TRUE)
+
+# clusterProfiler package
+# enrichedWP <- enrichWP(ENTREZ_diff_genes, organism = wiki_oganism)
+```
+
+Moreover, you can use additional visualization solutions for enrichment analysis implemented in clusterProfiler, if you are interested to go beyond examples demonstrated previously.
+
+Read more: https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html
+
+```{r}
+# sessionInfo() documents software versions for reproducibility
+sessionInfo() 
+```
+

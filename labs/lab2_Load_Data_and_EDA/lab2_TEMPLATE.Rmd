@@ -1,0 +1,313 @@
+---
+title: "lab2: Load Data and Do Exploatory Data Analysis"
+author: "Your name or nickname"
+date: "2025-07-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this lab you get some hints and instructions. Once you solve the tasks, remove comment
+symbols for lines of code, so that they are executed in the code chunks. Commenting you code
+is important not only for future yourself, but also for other users to understand
+what you have done. Please, provide meaningful comments for each step of the analysis.
+
+```{r}
+# Load necessary libraries
+# library(______) # tximport, check & write what this library does
+# library(______) # tidyverse,check & write what this library does
+
+# 💡 HELP: Check what these libraries do
+# ?tximport
+# ?tidyverse
+```
+
+## Project name 
+
+Write short project description
+
+## Data download
+
+```{bash, eval = F}
+# create a folder to store the data
+# mkdir -p ../../data/{project_name}
+```
+
+```{bash, eval = F}
+# data download 
+#wget "https://www.dropbox.com/scl/fo/i387hjzocw227bjllf069/AB0Y-Rt3DxCAXMCJKJVGppM?rlkey=4feunl032pfpbr69w9yfj4al4&st=l2deogkv&dl=1" -O  #../../data/{project_name}/{project_data}.zip
+```
+
+**Unzip the downloaded files in the Terminal window of your RStudio.** 
+
+```
+unzip ../../data/{project_name}/{project_data}.zip -d ../../data/{project_name}/{project_data}
+```
+
+⚠️ Note: In the code chunks above, we used bash commands to create a folder where we download the data, which was specified by {bash}. Make sure eval = F is specified in these chunks (e.g., {bash, eval = F}) before rendering HTMLs, so that you do not do this repeatedly every time you perform a new rendering. You can also add eval = F to any chunk you don't want to execute when rendering the Rmd again.
+
+## Create a design table from your experimental design info
+
+```{r}
+# TODO: Create a design table with sample information
+# HINT: Use data.frame() function
+# Your table should have two columns:
+# 1. Sample_ID: the SRR numbers
+# 2. Condition: depending on the expereimental design
+
+# design_table <- ______(
+#   Sample_ID = c("______", "______", "______", "______"),
+#   Condition = c("______", "______", "______", "______")
+# )
+# design_table
+
+# 💡 HELP: Learn about data frames
+# ?data.frame
+```
+
+**🧠 Think:** Why is it important to have an experimental design table? What information does it capture?
+
+## Load your data into R
+
+```{r}
+# TODO: Define the path to your data
+# HINT: Look at the file structure from the download section
+
+# Define base paths
+# data_path <- "../../data/EMT"
+# project <- "______"  # HINT: Look at the folder name with data
+
+# paste0() concatenates strings to create file paths for data location
+# data_path <- "../../data/EMT"
+# project <- "TGFbeta_data"
+
+# list.files() displays all files in the salmon quantification directory
+# ________(paste0(data_path, "/", ______, "/", "salmon_quantification"))
+
+# 💡 HELP: Understand file path construction
+# ?paste0
+# ?list.files
+```
+
+**🧠 Think:** What do you see when you list the files? These should be your sample IDs!
+
+```{r}
+# TODO: Create full file paths to each sample's quant.sf file
+# HINT: Use file.path() function 
+# HINT: Each sample has a folder named with its Sample_ID
+# HINT: Inside each folder is a file called "quant.sf"
+
+# file.path() constructs proper file paths to salmon quantification files for each sample
+
+# quant_files <- ______(data_path, 
+#                       ______, 
+#                       paste0("salmon_quantification", "/", design_table$______), 
+#                       "______")
+# quant_files
+```
+
+```{r}
+# TODO: Give meaningful names to your file paths
+# HINT: Combine condition and sample ID for clarity
+# HINT: Use paste0() to combine design_table$Condition and design_table$Sample_ID
+# HINT: Use names() function to assign names to your quant_files
+
+# ______(quant_files) <- paste0(design_table$______, "_", design_table$______)
+# quant_files
+```
+
+```{r}
+# TODO: Read the transcript-to-gene mapping file
+# HINT: Use read_csv() function
+# HINT: The file is called "tx2gene.ensembl_custom.v102.csv"
+
+# tx2gene <- ______("______")
+# tx2gene
+```
+
+**🧠 Think:** Why do we need to convert from transcripts to genes? What's the difference?
+
+```{r}
+# TODO: Import the salmon quantification data and summarize at gene level
+# HINT: Use tximport() function
+# HINT: You need three parameters:
+#   - files: your quant_files vector
+#   - type: "salmon" (since we used salmon for quantification)
+#   - tx2gene: your mapping table
+
+# tximport() imports salmon quantification data and summarizes at gene level using transcript-to-gene mapping
+# txi <- ______(______, type = 'salmon', tx2gene=______)
+
+# 💡 HELP: Learn about tximport
+# ?tximport
+```
+
+```{r}
+# TODO: Examine the structure of your imported data
+# HINT: Use str() function
+
+#______(txi)
+```
+
+```{r}
+# TODO: Look at the first few rows of the count matrix
+# HINT: Use head() function on txi$counts
+
+# ______(txi$______)
+```
+
+```{r}
+# TODO: Convert to tibble and select one sample
+# HINT: Use as_tibble() and select() functions
+# HINT: Try selecting the first TGFbeta3 sample
+
+#______(txi$counts) %>% select(______)
+
+# 💡 HELP: Learn about data conversion and selection
+# ?as_tibble
+# ?select
+```
+
+## Basic Data Visualization
+
+Now let's create some simple plots to understand our data better!
+
+### Library Size Visualization
+
+**📖 Background:** Library size represents the total number of reads sequenced for each sample. Ideally, all samples should have similar library sizes, indicating consistent sequencing depth.
+
+```{r}
+# TODO: Calculate total read counts for each sample
+# HINT: Use colSums() function on the count matrix
+# HINT: The count matrix is stored in txi$counts
+
+# library_sizes <- ______(txi$______)
+
+# TODO: Create a data frame for plotting
+# HINT: You need two columns:
+# 1. Sample names (use names() function)
+# 2. Library sizes (the values you just calculated)
+
+# Create data frame for plotting
+# lib_df <- data.frame(
+#   Sample = ______(library_sizes),
+#   Library_Size = ______
+# )
+
+# Look at your data frame
+# lib_df
+
+# 💡 HELP: Learn about column operations
+# ?colSums
+# ?names
+
+# TODO: Create a bar plot showing library sizes
+# HINT: Use ggplot() with geom_bar()
+# HINT: Map Sample to x-axis and Library_Size to y-axis
+
+# ggplot() creates bar plot of library sizes
+# ______(lib_df, aes(x = ______, y = ______)) +
+#   geom_bar(stat = "identity") +
+#   labs(title = "______", x = "______", y = "______") +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 💡 HELP: Learn about ggplot2
+# ?ggplot
+# ?geom_bar
+# ?labs
+# ?theme
+```
+
+### Count Distribution
+
+```{r}
+# TODO: Transform count data to log scale
+# HINT: Use log2() function
+# HINT: Add 1 to avoid log(0) which is undefined
+# HINT: Apply this to txi$counts
+
+# log_counts <- log2(txi$______ + _)
+
+# TODO: Convert to long format for ggplot
+# HINT: Start with log_counts, convert to as_tibble
+# HINT: Use pivot_longer() to reshape the data
+# HINT: everything() selects all columns
+# HINT: Set names_to = "Sample" and values_to = "Log_Counts"
+
+# count_df <- log_counts %>%
+#   as______() %>%
+#   pivot_longer(______(), names_to = "______", values_to = "______")
+
+# Look at the first few rows
+# ______(count_df)
+
+# TODO: Create histogram showing count distributions
+# HINT: Use ggplot() with geom_histogram()
+# HINT: Map Log_Counts to x-axis
+# HINT: Use facet_wrap() to create separate panels for each sample
+# HINT: Set bins = 20 for histogram
+
+# ggplot() creates histogram of log-transformed counts
+# ______(count_df, aes(x = ______)) +
+#   geom_histogram(bins = __) +
+#   facet_wrap(~Sample) +
+#   labs(title = "______", x = "______", y = "______")
+
+# 💡 HELP: Learn about histograms and faceting
+# ?geom_histogram
+# ?facet_wrap
+```
+
+**🧠 Think:**
+- Do all samples show similar distribution shapes?
+- What does the peak around 0 represent?
+- Why do we see a long tail to the right?
+
+## Save Data for the Next Analysis Steps
+
+**📖 Background:** RDS files preserve R objects exactly as they are, making them perfect for saving complex data structures for later analysis.
+
+```{r}
+# TODO: Save the tximport object for future use
+# HINT: Use saveRDS() function
+# HINT: Save txi object as "txi_EMT_data.rds"
+
+# saveRDS() saves the tximport object as RDS file for use in downstream analysis
+# ______(txi, file = "______.rds")
+
+# Also save design table for reference
+# saveRDS(______, file = "design_table.rds")
+```
+
+**Answer these questions in your report:**
+
+1. **Data Structure:** What does the `txi` object contain? What are the different components (hint: use `names(txi)`)?
+
+2. **Sample Naming:** Why did we create meaningful names for our samples? How does this help in downstream analysis?
+
+3. **File Organization:** How is the salmon output organized? What would happen if the file paths were incorrect?
+
+## Troubleshooting Tips
+
+**Common Issues:**
+
+1. **File not found errors:** 
+   - Check your file paths carefully
+   - Make sure you've unzipped the data
+   - Use `list.files()` to verify file locations
+
+2. **Object not found errors:**
+   - Check that you've created all required objects
+   - Make sure you've run all previous code chunks
+
+3. **Function not found errors:**
+   - Check that you've loaded all required libraries
+   - Use `?function_name` to verify function exists
+
+4. **Column name errors:**
+   - Check your design table column names
+   - Make sure Sample_ID and Condition are spelled correctly
+   
+**🎉 Congratulations!** You've successfully imported count data and saved it for downstream analysis!

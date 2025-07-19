@@ -1,0 +1,361 @@
+---
+title: "lab3: Differetial Gene Expression Analysis"
+author: "Your name or nickname"
+date: "2025-07-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this lab you get some hints and instructions. Once you solve the tasks, remove comment
+symbols for lines of code, so that they are executed in the code chunks. Commenting you code
+is important not only for future yourself, but also for other users to understand
+what you have done. Please, provide meaningful comments for each step of the analysis.
+
+```{r, message=FALSE}
+# TODO: Load the necessary libraries for differential  gene expression analysis
+# library(______) # tximport, check & write what this library does
+# library(______) # tidyverse, check & write what this library does
+# library(______) # DESeq2, check & write what this library does
+# library(______) # AnnotationDbi, check & write what this library does
+# library(______) # org.Hs.eg.db
+
+# 💡 HELP: Check what these libraries do
+# ?DESeq2
+# ?AnnotationDbi
+```
+
+## Load Gene Level Quantification and Design File from Previous Lab
+
+```{r}
+# TODO: Load the saved data objects from the previous lab
+# HINT: Use readRDS() function
+# HINT: Load both txi object and design table
+
+# txi <- ______("../______/______")
+# design_file <- ______("../______/______")
+
+# 💡 HELP: Learn about loading R objects
+# ?readRDS
+```
+
+```{r}
+# TODO: Construct DESeqDataSet from the txi object and sample information
+# HINT: Use DESeqDataSetFromTximport() function
+# HINT: You need: txi object, colData (sample info), and design formula
+# HINT: Design formula should be ~ Condition
+
+# ddsTxi <- ______(______,
+#                  colData = ______,
+#                  design = ~ ______) 
+
+# ddsTxi
+
+# 💡 HELP: Learn about DESeq2 objects
+# ?DESeqDataSetFromTximport
+```
+
+```{r}
+# TODO: Display experimental conditions 
+# HINT: Use colData() function
+
+# ______(ddsTxi)
+```
+
+**🧠 Think:** What information does colData contain? Why is this important for the analysis?
+
+## Set Reference Condition for Comparison
+
+```{r}
+# TODO: Extract the control condition name to set as reference
+# HINT: Use the provided code structure
+# HINT: We want to extract "Control" from the Condition column
+
+# reference <- as_tibble(colData(ddsTxi)) %>% 
+#   dplyr::select(______) %>% 
+#   filter(Condition == "______") %>% 
+#   unique() %>% 
+#   unlist() %>% 
+#   as.character()
+# reference
+```
+
+```{r}
+# TODO: Set Control as the reference condition
+# HINT: Use relevel() function
+# HINT: The reference should be the variable you created above
+
+# ddsTxi$Condition <- ______(ddsTxi$Condition, ref=______)
+```
+
+**🧠 Think:** Why do we need to set a reference condition? How does this affect fold change calculations?
+
+## Run Differential Expression Analysis
+
+```{r, message = FALSE}
+# TODO: Run the DESeq2 analysis
+# HINT: Use DESeq() function on your ddsTxi object
+
+# dds <- ______(______)
+
+# 💡 HELP: Learn about DESeq2 function
+# ?DESeq
+```
+
+## Filter Low Count Genes
+
+```{r}
+# TODO: Extract and display the count matrix
+# HINT: Use counts() function and head() to show first few rows
+
+# head(______(______))
+
+# According to DESeq2 tutorial, the count of 10 is a reasonable choice. We will
+# keep only counts if there are at least 10 of them in at least certain number
+# of samples (which will be equal to the number of samples in the smallest 
+# group / condition)
+
+# Define smallest group size (condition with smallest number of samples)
+# smallestGroupSize <- ______  # HINT: How many samples we have for the smallest group?
+
+# TODO: Create filtering criteria
+# HINT: Use rowSums() with counts(dds) >= 10
+# HINT: Compare to smallestGroupSize
+
+# keep <- rowSums(counts(dds) >= ______) >= ______
+# SUBSET dds object to keep entries that satisfy the condition above
+# dds <- dds[______,]
+```
+## Extract and Summarize Results
+
+```{r}
+# TODO: Extract results with significance threshold of 0.05
+# HINT: Use results() function with alpha parameter
+
+# res05 <- results(______, alpha=______)
+# summary(______)
+```
+
+**🧠 Think:** What do the numbers in the summary tell you about your experiment?
+
+## Visualize Results with MA Plot
+
+```{r, fig.width=5, fig.height=5}
+# TODO: Create MA plot to visualize results
+# HINT: Use plotMA() function
+# ______(______)
+
+# 💡 HELP: Learn about MA plots
+# ?plotMA
+```
+
+**🧠 Think:** Inspect MA plot visually: what does it tell you?
+
+## Create Results Directory
+
+```{r}
+# TODO: Create organized directory for saving results
+# HINT: Use paste0() to combine strings
+# HINT: Use dir.exists() and dir.create() to check and create directory
+
+# project_name <- "______"
+# result_folder <- ______("results_", ______)
+# if(!______(result_folder)){
+#   ______(result_folder)}
+
+# 💡 HELP: Learn about directory operations
+# ?dir.exists
+# ?dir.create
+```
+
+## Save MA Plot
+
+```{r}
+# TODO: Save MA plot as PDF
+# HINT: Use pdf() to open file, plotMA() to create plot, dev.off() to close
+# HINT: Create meaningful filename using paste0()
+
+# condition <- "EMT_vs_normal" # HINT: Describe your comparison (e.g., "Knockdown_vs_Control")
+# ______(paste0(result_folder, "/", ______, "_MAplot.pdf")) 
+# ______(res05)
+# ______()
+
+# 💡 HELP: Learn about saving plots
+# ?pdf
+# ?dev.off
+# TODO: Check if the plot was saved in the specified location
+```
+
+## Principal Component Analysis
+
+```{r, fig.width=5, fig.height=5}
+# TODO: Apply variance stabilizing transformation
+# HINT: Use vst() function with blind=FALSE
+# vsd <- ______(dds, blind=______)
+
+# TODO: Display sample information
+# ______(vsd)
+```
+
+```{r, fig.width=5, fig.height=5}
+# TODO: Create PCA plot
+# HINT: Use plotPCA() with intgroup parameter
+# HINT: Add a title using ggtitle()
+# PCA_plot <- ______(vsd, intgroup=c("______")) + 
+#   ggplot2::______("______") 
+# PCA_plot
+
+# 💡 HELP: Learn about variance stabilization and PCA
+# ?vst
+# ?plotPCA
+```
+
+**🧠 Think:** Do samples cluster by treatment condition? 
+
+## Save PCA Plot 
+
+```{r}
+# TODO: Save PCA plot as PDF
+# HINT: Follow same pattern as MA plot saving
+# condtion <- "______"
+# pdf(______(______, "/", ______, "_PCA___.pdf")) 
+# PCA_plot
+# dev.off()
+# TODO: Check if the plot was saved in the specified location
+```
+
+
+
+## Add Gene Annotations
+
+```{r}
+# mapIds() maps Ensembl gene IDs to human-readable gene symbols
+
+# TODO: Map Ensembl IDs to gene symbols
+# HINT: Use mapIds() function from org.Hs.eg.db
+# HINT: Parameters: database, keys, column, keytype, multiVals
+
+# Add Gene Symbols
+# res05$symbol <- ______(______,
+#                        keys=______(______),
+#                        column="SYMBOL",
+#                        keytype="ENSEMBL",
+#                        multiVals="first")
+# res05
+
+# 💡 HELP: Learn about gene annotation
+# ?mapIds
+# What is the meaning of multiVals argument and what is its default behaviour?
+```
+
+```{r}
+# TODO: Add full gene descriptions
+# HINT: Similar to above but use column="GENENAME"
+
+# res05$gene_name <- ______(______,
+#                           keys=______,
+#                           column="______",
+#                           keytype="______",
+#                           multiVals="first")
+# res05
+```
+
+```{r}
+# TODO: Store Ensembl IDs in a column (at the moment Ensembl IDs are the rows)
+# res05$ENSEMBL <- ______(res05)
+```
+
+
+```{r}
+# TODO: Add Entrez Gene IDs for pathway analysis we do later
+# HINT: Use column="ENTREZID"
+# res05$ENTREZID <- mapIds(______,
+#                           keys=______,
+#                           column="______",
+#                           keytype="______",
+#                           multiVals="first")
+```
+
+```{r}
+# Display annotated results & inspect additional annotation we added to our results
+# res05
+```
+
+**🧠 Think:** Why do we need multiple types of gene identifiers? When would you use each type?
+
+### Order and Export Results
+
+```{r}
+# order() sorts genes by statistical significance (lowest p-value first)
+
+# TODO: Order results by statistical significance
+# HINT: Use order() function on p-adjusted values
+
+# resOrdered <- res05[______(res05$______),]
+# 
+# # Preview the results
+# ______(resOrdered, 20)
+```
+
+```{r}
+# as.data.frame() converts DESeq2 results to standard data frame for export
+
+# TODO: Convert to data frame and save all results
+# HINT: Use as.data.frame() and write_tsv()
+
+# resOrderedDF <- ______(resOrdered)
+
+# Save results as tsv file
+# ______(resOrderedDF, 
+#           file = paste0(______, "/", 
+#                         ______, 
+#                         "_all_genes_results.tsv"))
+
+# TODO: Extract and save upregulated genes
+# HINT: Use subset() with padj < 0.05 AND log2FoldChange > 0
+# HINT: Use arrange() to sort by log2FoldChange (descending order)
+
+# upreg_and_signif <- ______(
+#   resOrderedDF,______ < ______ & ______ > ______) %>% 
+#   ______(______(______))
+
+# Preview table 
+# ______(upreg_and_signif)
+
+# Save results as tsv file
+# ______(upreg_and_signif, 
+#           file = paste0(______, "/", 
+#                         ______, 
+#                         "_upreg_genes_results.tsv"))
+
+# TODO: Extract and save downregulated genes  
+# HINT: Similar to above but log2FoldChange < 0
+# HINT: Sort by log2FoldChange in ascending order
+
+# downreg_and_signif <- ______(
+#   resOrderedDF,______ < ______ & ______ < ______) %>% 
+#   ______(______)
+
+# Preview results 
+# ______(downreg_and_signif)
+
+# Save results as tsv file
+# ______(______, file = paste0(______, "/", ______, "_downreg_genes_results.tsv"))
+```
+
+```{r}
+# TODO: Record session information for reproducibility
+# HINT: Use sessionInfo() function
+```
+
+**Answer these questions in your report:**
+
+1. How many genes were significantly up- and down-regulated?
+
+2. Do your MA plot and PCA plot suggest the experiment worked well? 
+
+3. Look at your top differential expressed genes - do any make biological sense for your experimental setup? Report your observations.
+
+4. Why do we have p-adjusted values in DESeq report?

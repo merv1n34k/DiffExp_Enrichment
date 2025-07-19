@@ -1,0 +1,149 @@
+---
+title: "lab2: Load data and Exploatory Data Analysis"
+author: "Your name or nickname"
+date: "2025-07-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load necessary libraries
+library(tximport) # tximport() imports and summarizes transcript-level abundance estimates from salmon/kallisto
+library(tidyverse) # Collection of packages for data manipulation and visualization (dplyr, ggplot2, etc.)
+```
+
+## EMT
+
+This project analyzes RNA-seq data from an epithelial-mesenchymal transition (EMT) experiment. The study examines the effects of TGF-beta3 treatment on gene expression in epithelial cells. The input data consists of salmon quantification files from 4 samples: 2 TGF-beta3 treated samples and 2 control samples. The goal is to identify differentially expressed genes involved in the EMT process and perform initial data quality assessment
+
+## Data download
+
+```{bash, eval = F}
+# create a folder to store the data
+mkdir -p ../../data/EMT
+```
+
+```{bash, eval = F}
+# data download 
+wget "https://www.dropbox.com/scl/fo/i387hjzocw227bjllf069/AB0Y-Rt3DxCAXMCJKJVGppM?rlkey=4feunl032pfpbr69w9yfj4al4&st=l2deogkv&dl=1" -O ../../data/EMT/TGFbeta_data.zip
+```
+
+**Unzip the downloaded files in the Terminal window of your RStudio.** 
+
+```
+unzip ../../data/EMT/TGFbeta_data.zip -d ../../data/EMT/TGFbeta_data
+```
+
+⚠️ Note: In the code chunks above, we used bash commands to create a folder where we download the data, which was specified by {bash}. Make sure eval = F is specified in these chunks (e.g., {bash, eval = F}) before rendering HTMLs, so that you do not do this repeatedly every time you perform a new rendering. You can also add eval = F to any chunk you don't want to execute when rendering the Rmd again.
+
+## Create a design table from your experimental design info
+
+```{r}
+# data.frame() creates a structured table linking sample IDs to their experimental conditions
+design_table <- data.frame(
+  Sample_ID = c("SRR8460397", "SRR8460398", "SRR8460399", "SRR8460400"),
+  Condition = c("TGFbeta3", "TGFbeta3", "Control", "Control")
+  )
+design_table
+```
+
+## Load your data into R
+
+```{r}
+# paste0() concatenates strings to create file paths for data location
+data_path <- "../../data/EMT"
+project <- "TGFbeta_data"
+# list.files() displays all files in the salmon quantification directory
+list.files(paste0(data_path, "/", project, "/", "salmon_quantification"))
+```
+
+```{r}
+# file.path() constructs proper file paths to salmon quantification files for each sample
+quant_files <- file.path(data_path, 
+                         project, 
+                         paste0("salmon_quantification", "/",
+                                design_table$Sample_ID
+                                ), 
+                         "quant.sf")
+quant_files
+```
+```{r}
+# names() assigns meaningful labels combining condition and sample ID to the file paths
+names(quant_files) <- paste0(design_table$Condition, "_", design_table$Sample_ID)
+quant_files
+```
+```{r}
+# read_csv() loads the transcript-to-gene mapping table for converting transcript IDs to gene IDs
+tx2gene <- read_csv("tx2gene.ensembl_custom.v102.csv")
+tx2gene
+```
+
+```{r}
+# tximport() imports salmon quantification data and summarizes at gene level using transcript-to-gene mapping
+txi <- tximport(quant_files, type = 'salmon', tx2gene=tx2gene)
+```
+```{r}
+# str() displays the structure and contents of the tximport object
+str(txi)
+```
+```{r}
+# head() displays the first few rows of the gene-level count matrix
+head(txi$counts)
+```
+```{r}
+# as_tibble() converts count matrix to tibble format and select() extracts specific sample column
+as_tibble(txi$counts) %>% select(TGFbeta3_SRR8460397)
+```
+
+
+## Basic Data Visualization
+
+### Library Size Visualization
+
+```{r}
+# colSums() calculates total read counts (library size) for each sample
+library_sizes <- colSums(txi$counts)
+
+# Create data frame for plotting
+lib_df <- data.frame(
+  Sample = names(library_sizes),
+  Library_Size = library_sizes
+)
+
+# ggplot() creates bar plot of library sizes
+ggplot(lib_df, aes(x = Sample, y = Library_Size)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Library Sizes", x = "Sample", y = "Total Counts") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Count Distribution
+
+```{r}
+# log2() transforms counts to log scale, adding 1 to avoid log(0)
+log_counts <- log2(txi$counts + 1)
+
+# Convert to long format for ggplot
+count_df <- log_counts %>%
+  as_tibble() %>%
+  pivot_longer(everything(), names_to = "Sample", values_to = "Log_Counts")
+
+# ggplot() creates histogram of log-transformed counts
+ggplot(count_df, aes(x = Log_Counts)) +
+  geom_histogram(bins = 20) +
+  facet_wrap(~Sample) +
+  labs(title = "Count Distribution", x = "Log2(Counts + 1)", y = "Frequency")
+```
+
+## Save Data for the Next Analysis Steps
+
+```{r}
+# saveRDS() saves the tximport object as RDS file for use in downstream analysis
+saveRDS(txi, file = "txi_EMT_data.rds")
+
+# Also save design table for reference
+saveRDS(design_table, file = "design_table.rds")
+```
