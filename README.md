@@ -55,6 +55,11 @@ BioProject: [PRJNA515936](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA515936)
 wget "https://www.dropbox.com/scl/fo/i387hjzocw227bjllf069/AB0Y-Rt3DxCAXMCJKJVGppM?rlkey=4feunl032pfpbr69w9yfj4al4&st=l2deogkv&dl=1" -O TGFbeta_data.zip
 # Decompress downloaded folder
 unzip TGFbeta_data.zip -d TGFbeta_data
+
+# Download salmon quantification files for schizophrenia_GSE63738 dataset
+wget "https://www.dropbox.com/scl/fo/u9bbd2p4zub4zh1zz52q4/AHS29ectp5VKqNEgNNGAWMQ?rlkey=r4fey782143i1x7lt0t0jpuav&st=uj1har82&dl=0" -O schizophrenia_GSE63738.zip
+# Decompress downloaded folder
+unzip schizophrenia_GSE63738.zip -d schizophrenia_GSE63738
 ```
 
 ## 💻 Labs
