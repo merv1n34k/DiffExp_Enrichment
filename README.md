@@ -80,7 +80,7 @@ vs. normal
 
 💡 General instructions for downloading: not required to do it right away. Will be discussed in detail in Lab 2.
 ```
-wget "https://www.dropbox.com/scl/fo/uogwkn77jmhvor1rqc8cz/AMER7_che3v0JfUEssh5p0Y?rlkey=55wklf7huqpplfuj08e6e2t80&st=artgap4o&dl=0" -O Glioblastoma_GSE147352.zip
+wget "https://www.dropbox.com/scl/fi/6xx7jp9mr320434ybt10p/salmon_quantification.zip?rlkey=crnuuot35wjnfvxb9vyo6cgs2&st=54lr8iv8&dl=0" -O Glioblastoma_GSE147352.zip
 # Decompress downloaded folder
 unzip Glioblastoma_GSE147352.zip -d Glioblastoma_GSE147352
 ```
