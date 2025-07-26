@@ -3,21 +3,20 @@ title: "Title of the project"
 author: "Your Name or Nickname"
 date: "2025-07-08"
 output: html_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Report the most important findings and discuss the results**
+**Report the most important findings and discuss the results.** References to the papers should be provided in `references.bib` file, which is linked to this document (see the header in `Rmd` file). You cite the papers like [@liu2015m6a]. In this case reference will automatically appear in your `References` section at the end of the report. In order to get citations already in the desired format for `references.bib` file, go to Google Scholar, find the article, click on `Cite` and select `BibTeX`. Copy the citation an paste it in `references.bib`
 
 ## Topic of the research project
 
 ## Introduction
 
 Here I am writing the introduction to my topic and cite the relevant papers.
-
-- HOW TO CITE: References must follow the format *First author, Year*. It must be linked to the DOI of the article. The full reference needs to be provided in the '*Literature*' section (see the example of Liu et al., 2015a).
 
 ## Dataset
 
@@ -36,11 +35,6 @@ In this section your concrete results should be described. Include the most impo
 
 Here you should discuss all results you have got over the course. Put the results into a broader picture and give some future outlook.
 
-## Literature
-
-The literature should be sorted alphabetically
-
- + Liu et al, 2015 | Liu, N. et al., 2015, N(6)-methyladenosine-dependent RNA structural switches regulate RNA-protein interactions, Nature, 518(7540), pp. 560–564, DOI: 10.1038/nature14234
-
+## References 
 
 
