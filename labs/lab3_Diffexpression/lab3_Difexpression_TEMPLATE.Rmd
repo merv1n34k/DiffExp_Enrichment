@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Lab workflow is based on the [DESeq2 tutorial](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
+
 In this lab you get some hints and instructions. Once you solve the tasks, remove comment
 symbols for lines of code, so that they are executed in the code chunks. Commenting you code
 is important not only for future yourself, but also for other users to understand

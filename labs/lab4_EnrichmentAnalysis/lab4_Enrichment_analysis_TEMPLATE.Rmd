@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Lab workflow is based on the [clusterProfiler tutorial](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html).
+
 ## Load required libraries 
 
 ```{r, message=FALSE}
