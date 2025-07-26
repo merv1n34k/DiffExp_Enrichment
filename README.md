@@ -67,6 +67,10 @@ wget "https://www.dropbox.com/scl/fo/i387hjzocw227bjllf069/AB0Y-Rt3DxCAXMCJKJVGp
 # Decompress downloaded folder
 unzip TGFbeta_data.zip -d TGFbeta_data
 
+wget "https://www.dropbox.com/scl/fo/uogwkn77jmhvor1rqc8cz/AMER7_che3v0JfUEssh5p0Y?rlkey=55wklf7huqpplfuj08e6e2t80&st=artgap4o&dl=0" -O Glioblastoma_GSE147352.zip
+# Decompress downloaded folder
+unzip Glioblastoma_GSE147352.zip -d Glioblastoma_GSE147352
+
 # Download salmon quantification files for schizophrenia_GSE63738 dataset
 wget "https://www.dropbox.com/scl/fo/u9bbd2p4zub4zh1zz52q4/AHS29ectp5VKqNEgNNGAWMQ?rlkey=r4fey782143i1x7lt0t0jpuav&st=uj1har82&dl=0" -O schizophrenia_GSE63738.zip
 # Decompress downloaded folder
