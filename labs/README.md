@@ -21,7 +21,7 @@ Welcome to the course lab series! Each lab is designed to build your skills step
 | 3   | Differential Gene Expression Analysis | [Lab3](./lab3_Diffexpression/)      |
 | 4   | Functional Enrichment Analysis    | [Lab4](./lab4_EnrichmentAnalysis/)      |
 | 5   | Final Report & Interpretation    | [Lab5](./lab5_Report/)      |
-| 6   | R Shiny application (advanced / optional) | [Lab6](./Lab6/)      |
+| 6   | R Shiny application (advanced / optional) | [Lab6](./lab6_RShiny/)      |
 
 ---
 
