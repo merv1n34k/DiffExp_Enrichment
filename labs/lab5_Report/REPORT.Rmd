@@ -1,6 +1,6 @@
 ---
-title: "00_REPORT"
-author: "IU Kouzel"
+title: "Title of the project"
+author: "Your Name or Nickname"
 date: "2025-07-08"
 output: html_document
 ---
@@ -9,4 +9,38 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Report the most important findings and discuss the results
+**Report the most important findings and discuss the results**
+
+## Topic of the research project
+
+## Introduction
+
+Here I am writing the introduction to my topic and cite the relevant papers.
+
+- HOW TO CITE: References must follow the format *First author, Year*. It must be linked to the DOI of the article. The full reference needs to be provided in the '*Literature*' section (see the example of Liu et al., 2015a).
+
+## Dataset
+
+Describe your dataset
+
+## Methods
+
+- describe differential gene expression
+- describe pathway analysis 
+
+## Results
+
+In this section your concrete results should be described. Include the most important figures and tables.
+
+## Discussion and Outlook
+
+Here you should discuss all results you have got over the course. Put the results into a broader picture and give some future outlook.
+
+## Literature
+
+The literature should be sorted alphabetically
+
+ + Liu et al, 2015 | Liu, N. et al., 2015, N(6)-methyladenosine-dependent RNA structural switches regulate RNA-protein interactions, Nature, 518(7540), pp. 560–564, DOI: 10.1038/nature14234
+
+
+
