@@ -65,6 +65,19 @@ vs. normal
 1. Haddock, S. et al. (2022). *Phenotypic and molecular states of IDH1 mutation-induced CD24-positive glioma stem-like cells.*
 [Neoplasia, 28](https://doi.org/10.1016/j.neo.2022.100790)
 
+**🧪 Experimental Design for Project 2 (Glioblastoma)**
+
+| Sample ID   | Condition   |
+|-------------|-------------|
+| glioblastoma_SRR11365267 | glioblastoma |
+| glioblastoma_SRR11365268 | glioblastoma |
+| glioblastoma_SRR11365269 | glioblastoma |
+| normal_SRR11365252 | normal |
+| normal_SRR11365253 | normal |
+| normal_SRR11365254 | normal |
+| ... | ... |
+
+
 💡 General instructions for downloading: not required to do it right away. Will be discussed in detail in Lab 2.
 ```
 wget "https://www.dropbox.com/scl/fo/uogwkn77jmhvor1rqc8cz/AMER7_che3v0JfUEssh5p0Y?rlkey=55wklf7huqpplfuj08e6e2t80&st=artgap4o&dl=0" -O Glioblastoma_GSE147352.zip
@@ -81,6 +94,8 @@ wget "https://www.dropbox.com/scl/fo/u9bbd2p4zub4zh1zz52q4/AHS29ectp5VKqNEgNNGAW
 # Decompress downloaded folder
 unzip schizophrenia_GSE63738.zip -d schizophrenia_GSE63738
 ```
+
+**🧪 Experimental Design for Project 3 (Schizophrenia)**
 
 | Sample ID    | Condition   |
 |----------------|-----------------|
