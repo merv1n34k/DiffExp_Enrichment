@@ -82,6 +82,22 @@ wget "https://www.dropbox.com/scl/fo/u9bbd2p4zub4zh1zz52q4/AHS29ectp5VKqNEgNNGAW
 unzip schizophrenia_GSE63738.zip -d schizophrenia_GSE63738
 ```
 
+| Sample ID    | Condition   |
+|----------------|-----------------|
+| SRR1686362     | Control         |
+| SRR1686363     | Control         |
+| SRR1686364     | Control         |
+| SRR1686365     | Control         |
+| SRR1686366     | Control         |
+| SRR1686367     | Control         |
+| SRR1686368     | Schizophrenia   |
+| SRR1686369     | Schizophrenia   |
+| SRR1686370     | Schizophrenia   |
+| SRR1686371     | Schizophrenia   |
+| SRR1686372     | Schizophrenia   |
+| SRR1686373     | Schizophrenia   |
+
+
 ## 💻 Labs
 
 All lab instructions and code are located in the **Labs** folder.
