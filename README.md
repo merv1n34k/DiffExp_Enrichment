@@ -45,9 +45,20 @@ BioProject: [PRJNA515936](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA515936)
 | SRR8460399  | Control     |
 | SRR8460400  | Control     |
 
-### 2. Glioblastoma vs. normal [GSE147352_PRJNA798408]
+### 2. Glioblastoma [GSE147352, PRJNA798408]
 
-### 3. iPSC-Purkinje cells differentiation [PRJNA1029787]
+**Study:** Phenotypic and molecular states of IDH1 mutation-induced CD24-positive glioma stem-like cells. 
+
+> **From the authors**:
+> Mutations in IDH1 and IDH2 drive the development of gliomas. These genetic alterations promote tumor cell renewal, disrupt differentiation states, and induce stem-like properties. Understanding how this phenotypic reprogramming occurs remains an area of high interest in glioma research. Our data demonstrate that induction of a CD24-positive population is one mechanism by which IDH-mutant tumors acquire stem-like properties. These findings have significant implications for our understanding of the molecular underpinnings of IDH-mutant gliomas.
+vs. normal
+
+📄 **References**:  
+1. Haddock, S. et al. (2022). *Phenotypic and molecular states of IDH1 mutation-induced CD24-positive glioma stem-like cells.*
+[Neoplasia, 28](https://doi.org/10.1016/j.neo.2022.100790)
+
+
+### 3. Schizophrenia [GSE63738]
 
 💡 General instructions for downloading: not required to do it right away. Will be discussed in detail in Lab 2.
 ```bash
